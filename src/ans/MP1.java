@@ -58,10 +58,19 @@ public class MP1 {
 		this.memory = memory;
 	}
 
+	/**
+	 * Main method handling code execution
+	 * 
+	 * @param codes
+	 *            a list of code lines
+	 * @return
+	 */
 	public List<String> execute(List<String> codes) {
 		List<String> list = new ArrayList<String>();
 		for (nextLine = 0; nextLine < codes.size(); nextLine++) {
+
 			String line = codes.get(nextLine);
+			System.out.println(line);
 			String out = parse(line);
 			list.add(out);
 		}
@@ -98,8 +107,8 @@ public class MP1 {
 		int i2 = Integer.parseInt(index2);
 		int line = Integer.parseInt(codeLine);
 		if (memory[i1].equals(memory[i2])) {
-			// goto codeLine
-			nextLine = line;
+			// goto codeLine, -1 bec actual lines in file starts with 0
+			nextLine = line - 1;
 		} else {
 			// do nothing
 		}
