@@ -70,7 +70,6 @@ public class MP1 {
 		for (nextLine = 0; nextLine < codes.size(); nextLine++) {
 
 			String line = codes.get(nextLine);
-			System.out.println(line);
 			String out = parse(line);
 			list.add(out);
 		}
