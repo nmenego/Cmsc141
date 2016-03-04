@@ -5,9 +5,13 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Random;
 
 /**
- * Sample solution to CMSC141 MP2. Man Lion Rabbit Cabbage river crossing
+ * Sample solution to CMSC141 MP2. Man Lion Rabbit carrot river crossing
  * problem.
  * 
  * @author NMEnego
@@ -92,25 +96,35 @@ public class MP2 {
 	 * An enum to represent the states of the problem.
 	 */
 	enum States {
-		LOSE(-2), // lion eats rabbit, rabbit eats cabbage
+		LOSE(-2), // lion eats rabbit, rabbit eats carrot
 		ERROR(-1), // invalid moves were made
 		MLRC_(0), // start state
 		_MLRC(1), // final state, winning state!
-		LC_MR(2), // lion cabbage - man rabbit
-		MLC_R(3), // man lion cabbage - rabbit
-		L_MRC(4), // lion - man rabbit cabbage
-		MLR_C(5), // man lion rabbit - cabbage
-		R_MLC(6), // rabbit - man lion cabbage
-		MR_LC(7), // man rabbit - lion cabbage
-		C_MLR(8), // cabbage - man lion rabbit
-		MRC_L(9); // man rabbit cabbage - lion
+		LC_MR(2), // lion carrot - man rabbit
+		MLC_R(3), // man lion carrot - rabbit
+		L_MRC(4), // lion - man rabbit carrot
+		MLR_C(5), // man lion rabbit - carrot
+		R_MLC(6), // rabbit - man lion carrot
+		MR_LC(7), // man rabbit - lion carrot
+		C_MLR(8), // carrot - man lion rabbit
+		MRC_L(9); // man rabbit carrot - lion
 
 		private final int idx;
+
 		States(int idx) {
 			this.idx = idx;
 		}
+
 		public int getIdx() {
 			return idx;
+		}
+
+		public static States getState(int state) {
+			for (States s : States.values()) {
+				if (s.getIdx() == state)
+					return s;
+			}
+			throw new IllegalArgumentException("Leg not found. Amputated?");
 		}
 	}
 
