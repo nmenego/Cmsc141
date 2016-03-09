@@ -5,10 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Random;
 
 /**
  * Sample solution to CMSC141 MP2. Man Lion Rabbit carrot river crossing
@@ -23,8 +19,8 @@ public class MP2 {
 	private States currentState;
 
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("mp2.in"));
-		BufferedWriter bw = new BufferedWriter(new FileWriter("mp2.out"));
+		BufferedReader br = new BufferedReader(new FileReader(args[0]));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(args[1]));
 
 		// load codes in a list. this might be a problem if code is too big.
 		String line;
@@ -62,6 +58,7 @@ public class MP2 {
 
 	// checks if given solution is valid
 	private boolean isValid(String solution) {
+//		System.out.println(solution + " "+currentState.name());
 		int size = solution.length();
 		for (int i = 0; i < size; i++) {
 			char curr = solution.charAt(i);
@@ -80,7 +77,10 @@ public class MP2 {
 			if (moveIndex >= 0 && currentState.getIdx() >= 0) {
 				// swap states
 				currentState = STATE_TABLE[currentState.getIdx()][moveIndex];
+//				System.out.println(curr + " " + currentState.name());
 			} else {
+//				System.out.println(currentState.getIdx() + " " + curr
+//						+ " count: " + i);
 				return false;
 			}
 		}
@@ -91,6 +91,22 @@ public class MP2 {
 			return false;
 		}
 	}
+	// this table represents the transition diagram
+	// M L R C
+	private static final States[][] STATE_TABLE = new States[][]{
+			// MAN LION RABBIT CARROT
+			{States.LOSE, States.LOSE, States.LC_MR, States.LOSE}, // MLRC_
+			{States.MLC_R, States.ERROR, States.MLRC_, States.ERROR}, // LC_MR
+			{States.LC_MR, States.C_MLR, States.ERROR, States.L_MRC}, // MLC_R
+			{States.LOSE, States.ERROR, States.MLR_C, States.MLC_R}, // L_MRC
+			{States.LOSE, States.R_MLC, States.L_MRC, States.ERROR}, // MLR_C
+			{States.MR_LC, States.MLR_C, States.ERROR, States.MRC_L}, // R_MLC
+			{States.R_MLC, States.ERROR, States._MLRC, States.ERROR}, // MR_LC
+			{States.LOSE, States.MLC_R, States.MRC_L, States.ERROR}, // C_MLR
+			{States.LOSE, States.ERROR, States.C_MLR, States.R_MLC}, // MRC_L
+			{States.LOSE, States.LOSE, States.MR_LC, States.LOSE}, // _MLRC
+
+	};
 
 	/**
 	 * An enum to represent the states of the problem.
@@ -99,15 +115,15 @@ public class MP2 {
 		LOSE(-2), // lion eats rabbit, rabbit eats carrot
 		ERROR(-1), // invalid moves were made
 		MLRC_(0), // start state
-		_MLRC(1), // final state, winning state!
-		LC_MR(2), // lion carrot - man rabbit
-		MLC_R(3), // man lion carrot - rabbit
-		L_MRC(4), // lion - man rabbit carrot
-		MLR_C(5), // man lion rabbit - carrot
-		R_MLC(6), // rabbit - man lion carrot
-		MR_LC(7), // man rabbit - lion carrot
-		C_MLR(8), // carrot - man lion rabbit
-		MRC_L(9); // man rabbit carrot - lion
+		LC_MR(1), // lion carrot - man rabbit
+		MLC_R(2), // man lion carrot - rabbit
+		L_MRC(3), // lion - man rabbit carrot
+		MLR_C(4), // man lion rabbit - carrot
+		R_MLC(5), // rabbit - man lion carrot
+		MR_LC(6), // man rabbit - lion carrot
+		C_MLR(7), // carrot - man lion rabbit
+		MRC_L(8), // man rabbit carrot - lion
+		_MLRC(9); // final state, winning state!
 
 		private final int idx;
 
@@ -127,21 +143,5 @@ public class MP2 {
 			throw new IllegalArgumentException("Leg not found. Amputated?");
 		}
 	}
-
-	// this table represents the transition diagram
-	// M L R C
-	private static final States[][] STATE_TABLE = new States[][]{
-			{States.LOSE, States.LOSE, States.LC_MR, States.LOSE}, // MLRC_
-			{States.MLC_R, States.ERROR, States.MLRC_, States.ERROR}, // LC_MR
-			{States.LC_MR, States.C_MLR, States.ERROR, States.L_MRC}, // MLC_R
-			{States.LOSE, States.ERROR, States.MLR_C, States.MLC_R}, // L_MRC
-			{States.LOSE, States.R_MLC, States.L_MRC, States.ERROR}, // MLR_C
-			{States.MR_LC, States.MLR_C, States.ERROR, States.MRC_L}, // R_MLC
-			{States.R_MLC, States.ERROR, States._MLRC, States.ERROR}, // MR_LC
-			{States.LOSE, States.LOSE, States.MR_LC, States.LOSE}, // _MLRC
-			{States.LOSE, States.MLC_R, States.MRC_L, States.ERROR}, // C_MLR
-			{States.LOSE, States.ERROR, States.C_MLR, States.R_MLC}, // MRC_L
-
-	};
 
 }
